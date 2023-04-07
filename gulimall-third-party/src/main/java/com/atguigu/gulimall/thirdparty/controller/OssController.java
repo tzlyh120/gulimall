@@ -4,7 +4,7 @@ import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.common.utils.BinaryUtil;
 import com.aliyun.oss.model.MatchMode;
 import com.aliyun.oss.model.PolicyConditions;
-import com.baomidou.mybatisplus.extension.api.R;
+import com.atguigu.gulimall.thirdparty.utils.R;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +33,7 @@ public class OssController {
 
     @Resource
     OSSClient ossClient;
+
 
     @RequestMapping("/oss/policy")
     public R policy(){

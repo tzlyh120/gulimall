@@ -26,3 +26,7 @@ mybatis-plus:
 
 server:
   port: 10010
+
+logging:
+  level:
+    com.atguigu.gulimall: debug

@@ -4,11 +4,17 @@ import com.atguigu.gulimall.product.dao.BrandDao;
 import com.atguigu.gulimall.product.dao.CategoryDao;
 import com.atguigu.gulimall.product.entity.BrandEntity;
 import com.atguigu.gulimall.product.entity.CategoryEntity;
+import com.atguigu.gulimall.product.service.BrandService;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -23,12 +29,17 @@ import javax.annotation.Resource;
 
 
 @Service("categoryBrandRelationService")
+@Slf4j
 public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandRelationDao, CategoryBrandRelationEntity> implements CategoryBrandRelationService {
 
     @Resource
     BrandDao brandDao;
     @Resource
     CategoryDao categoryDao;
+    @Resource
+    CategoryBrandRelationDao relationDao;
+    @Resource
+    BrandService brandService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -62,6 +73,19 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
     @Override
     public void updateCategory(Long catId, String name) {
         this.baseMapper.updateCategory(catId,name);
+    }
+
+    @Override
+    public List<BrandEntity> getBrandByCatId(Long catId) {
+        List<CategoryBrandRelationEntity> entities = relationDao.selectList(new QueryWrapper<CategoryBrandRelationEntity>().eq("catelog_id", catId));
+        List<BrandEntity> brandEntities = entities.stream().map((item) -> {
+            Long brandId = item.getBrandId();
+            BrandEntity entity = brandService.getById(brandId);
+            return entity;
+        }).collect(Collectors.toList());
+        System.out.println("*****************************中间站***************************：        "+brandEntities.size());
+//        log.info("*****************************中间站***************************",brandEntities.size());
+        return brandEntities;
     }
 
 }

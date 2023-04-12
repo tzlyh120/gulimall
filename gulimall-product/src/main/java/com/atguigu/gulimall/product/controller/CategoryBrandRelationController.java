@@ -3,8 +3,14 @@ package com.atguigu.gulimall.product.controller;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
+import com.atguigu.gulimall.product.entity.BrandEntity;
+import com.atguigu.gulimall.product.vo.BrandVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +29,7 @@ import com.atguigu.common.utils.R;
  * @date 2023-03-24 00:37:11
  */
 @RestController
+@Slf4j
 @RequestMapping("product/categorybrandrelation")
 public class CategoryBrandRelationController {
     @Autowired
@@ -31,6 +38,21 @@ public class CategoryBrandRelationController {
     /**
      * 列表
      */
+    @GetMapping("brands/list")
+    public R relationBrandList(@RequestParam(value="catId",required = true) Long catId){
+        List<BrandEntity> vos = categoryBrandRelationService.getBrandByCatId(catId);
+        log.info("****************vos************在这里",vos);
+        System.out.println("*****************************vos ***************************：        "+vos);
+        List<BrandVo> collect = vos.stream().map((item) -> {
+            BrandVo brandVo = new BrandVo();
+            brandVo.setBrandId(item.getBrandId());
+            brandVo.setBrandName(item.getName());
+//            BeanUtils.copyProperties(item, brandVo);
+            return brandVo;
+        }).collect(Collectors.toList());
+        System.out.println("*****************************结果***************************：        "+collect);
+        return R.ok().put("data",collect);
+    }
     @GetMapping("catelog/list")
     public R  catelogList(@RequestParam Long brandId){
         List<CategoryBrandRelationEntity> data = categoryBrandRelationService.list(

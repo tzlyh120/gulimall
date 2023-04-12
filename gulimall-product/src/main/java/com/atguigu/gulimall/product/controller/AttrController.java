@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.atguigu.gulimall.product.vo.AttrRespVo;
 import com.atguigu.gulimall.product.vo.AttrVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,10 +31,12 @@ public class AttrController {
     AttrService attrService;
 
 
-    @GetMapping("/base/list/{catelogId}")
+//    @GetMapping("/base/list/{catelogId}")
+    @GetMapping("/{attrType}/list/{catelogId}")
     public R baseAttrList(@RequestParam Map<String, Object> params,
-                          @PathVariable("catelogId") Long catelogId){
-        PageUtils page = attrService.queryBaseAttrPage(params,catelogId);
+                          @PathVariable("catelogId") Long catelogId,
+                          @PathVariable("attrType") String type){
+        PageUtils page = attrService.queryBaseAttrPage(params,catelogId,type);
         return R.ok().put("page",page);
     }
     /**
@@ -54,9 +57,9 @@ public class AttrController {
     @RequestMapping("/info/{attrId}")
     //RequiresPermissions("product:attr:info")
     public R info(@PathVariable("attrId") Long attrId) {
-        AttrEntity attr = attrService.getById(attrId);
-
-        return R.ok().put("attr", attr);
+//        AttrEntity attr = attrService.getById(attrId);
+        AttrRespVo respvo = attrService.getAttrInfo(attrId);
+        return R.ok().put("attr", respvo);
     }
 
     /**
@@ -75,8 +78,8 @@ public class AttrController {
      */
     @RequestMapping("/update")
     //RequiresPermissions("product:attr:update")
-    public R update(@RequestBody AttrEntity attr) {
-        attrService.updateById(attr);
+    public R update(@RequestBody AttrVo attr) {
+        attrService.updateAttr(attr);
 
         return R.ok();
     }

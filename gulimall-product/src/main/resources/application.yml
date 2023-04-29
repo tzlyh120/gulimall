@@ -8,8 +8,8 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
-    application:
-      name: gulimall-product
+#    application:
+#      name: gulimall-product
     alicloud:
       access-key: LTAI5tND9tGiu7LpPMAeidhH
       secret-key: 1pywswIl7eym1FqBajOrNw8zMQ61DV
@@ -18,6 +18,9 @@ spring:
   jackson:
     date-format: MM-dd-yyyy HH:mm:ss
     time-zone: GMT-4
+  thymeleaf:
+    cache: false
+
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
